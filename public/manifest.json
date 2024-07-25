@@ -1,19 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Audio Recorder",
+  "name": "Speech to Text Enhancer",
   "version": "1.0",
-  "permissions": ["activeTab"],
-  "action": {
-    "default_popup": "index.html",
-    "default_icon": {
-      "16": "logo.jpg",
-      "48": "logo.jpg",
-      "128": "logo.jpg"
-    }
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
   },
-  "icons": {
-    "16": "logo.jpg",
-    "48": "logo.jpg",
-    "128": "logo.jpg"
-  }
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "index.html"}
 }

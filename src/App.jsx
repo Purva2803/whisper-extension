@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const App = () => {
@@ -9,6 +9,21 @@ const App = () => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition();
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        document.getElementById('transcriptionTextArea').value += transcript;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [transcript]);
 
   const startListening = () => {
     resetTranscript();
@@ -32,7 +47,6 @@ const App = () => {
       <button onClick={SpeechRecognition.stopListening} disabled={!listening}>
         Stop Recording
       </button>
-      {console.log(transcript)}
       <textarea
         id="transcriptionTextArea"
         rows="10"
