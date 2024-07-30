@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import './App.css';
 
 const App = () => {
   const {
@@ -10,24 +11,37 @@ const App = () => {
     isMicrophoneAvailable,
   } = useSpeechRecognition();
 
+  const [focusedElement, setFocusedElement] = useState(null);
+
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-        document.getElementById('transcriptionTextArea').value += transcript;
-      }
+    const handleFocus = () => {
+      setFocusedElement(document.activeElement);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    const handleBlur = () => {
+      setFocusedElement(null);
+    };
+
+    document.addEventListener('focusin', handleFocus);
+    document.addEventListener('focusout', handleBlur);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('focusin', handleFocus);
+      document.removeEventListener('focusout', handleBlur);
     };
-  }, [transcript]);
+  }, []);
 
   const startListening = () => {
     resetTranscript();
     SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const handleInsertClick = () => {
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+      activeElement.value += transcript;
+      resetTranscript();
+    }
   };
 
   if (!browserSupportsSpeechRecognition) {
@@ -39,18 +53,21 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Audio Recorder</h1>
+    <div className="floating-widget">
+      <h1>Voice Input Everywhere</h1>
       <button onClick={startListening} disabled={listening}>
         {listening ? 'Listening...' : 'Start Recording'}
       </button>
       <button onClick={SpeechRecognition.stopListening} disabled={!listening}>
         Stop Recording
       </button>
+      <button onClick={handleInsertClick} disabled={!transcript}>
+        Insert Transcript
+      </button>
       <textarea
         id="transcriptionTextArea"
-        rows="10"
-        cols="50"
+        rows="5"
+        cols="30"
         value={transcript}
         readOnly
       />
