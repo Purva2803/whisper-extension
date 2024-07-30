@@ -54,7 +54,7 @@ const App = () => {
 
   return (
     <div className="floating-widget">
-      <h1>Voice Input Everywhere</h1>
+      <h2> Speech to Text Auto Fill</h2>
       <button onClick={startListening} disabled={listening}>
         {listening ? 'Listening...' : 'Start Recording'}
       </button>

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Speech to Text Enhancer",
+  "name": "Whisper-Extension",
   "version": "1.0",
   "permissions": ["activeTab", "scripting"],
   "background": {
@@ -13,5 +13,6 @@
     }
   ],
   "action": {
-    "default_popup": "index.html"}
+    "default_popup": "index.html"
+  }
 }
