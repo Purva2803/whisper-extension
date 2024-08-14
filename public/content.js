@@ -1,8 +1,13 @@
-// content.js
-const widgetContainer = document.createElement('div');
-widgetContainer.id = 'speech-to-text-enhancer-widget';
-document.body.appendChild(widgetContainer);
-
-const script = document.createElement('script');
-script.src = chrome.runtime.getURL('bundle.js');
-document.body.appendChild(script);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.action === "insertText") {
+	  const inputs = document.querySelectorAll('input, input, textarea');
+	  for (let input of inputs) {
+		if (input.value === "") {
+		  input.value = request.text;
+		  input.dispatchEvent(new Event('input', { bubbles: true }));
+		  break;
+		}
+	  }
+	}
+  });
+  

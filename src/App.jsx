@@ -36,12 +36,19 @@ const App = () => {
     SpeechRecognition.startListening({ continuous: true });
   };
 
+  // const handleInsertClick = () => {
+  //   const activeElement = document.activeElement;
+  //   if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+  //     activeElement.value += transcript;
+  //     resetTranscript();
+  //   }
+  // };
+
   const handleInsertClick = () => {
-    const activeElement = document.activeElement;
-    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
-      activeElement.value += transcript;
-      resetTranscript();
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: "insertText", text: transcript });
+    });
+    resetTranscript();
   };
 
   if (!browserSupportsSpeechRecognition) {
